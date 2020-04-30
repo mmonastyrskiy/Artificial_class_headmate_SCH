@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import datetime
+import NIERAutomata as automata
 # Список имен для id
 names = ['None', 'Max',"Uchitel"]
 
@@ -22,7 +23,7 @@ def getImagesAndLabels(path):
         id = int(os.path.split(imagePath)[-1].split(".")[1])
         ids.append(id)
     return face,ids 
-
+automata.CleanUP()
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('face/face.yml')
 cascadePath = "haarcascade_frontalface_default.xml"
@@ -55,6 +56,8 @@ while True:
         # Проверяем что лицо распознано
         if (confidence < 70):
             id = names[id]
+            if(confidence < 30):
+                automata.addNewPhoto(img,id)
             #print(names.index(id))
             inSchool[(names.index(id))][0] = True
             if inSchool[(names.index(id))] [1]== None:
